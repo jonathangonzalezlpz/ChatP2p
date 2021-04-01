@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="sample.Controllers.ControllerConexion">
+    <columnConstraints>
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+    </rowConstraints>
+    <children>
+        <Pane prefHeight="600.0" prefWidth="550.0">
+         <children>
+            <AnchorPane layoutX="63.0" layoutY="117.0" prefHeight="276.0" prefWidth="424.0">
+               <children>
+                  <TextField fx:id="txtfield_hostname" layoutX="189.0" layoutY="42.0" text="localhost" />
+                  <Text layoutX="80.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Host Name :">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="72.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port Number :">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <TextField fx:id="txtfield_port" layoutX="189.0" layoutY="105.0" text="1099" />
+                  <Button fx:id="btnConectar" layoutX="178.0" layoutY="213.0" mnemonicParsing="false" onAction="#Conectar" text="Conectar" />
+                  <TextField fx:id="txtfield_alias" layoutX="189.0" layoutY="160.0" text="Jesus" />
+                  <Text layoutX="116.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alias : ">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
+            <Text layoutX="187.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bienvenido al Chat P2P" textAlignment="CENTER">
+               <font>
+                  <Font name="System Bold" size="18.0" />
+               </font>
+            </Text>
+         </children></Pane>
+    </children>
+</GridPane>
