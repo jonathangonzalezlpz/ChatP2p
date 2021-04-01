@@ -32,6 +32,6 @@ public interface ClientInterface
     public void setAlias(String alias) throws RemoteException;
 
     //Permite recibir un mensaje
-    public Boolean recibirMensaje(String mensaje, ClientInterface emisor, String alias)
+    public Boolean recibirMensaje(String mensaje)
             throws RemoteException;
 } // end interface

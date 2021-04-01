@@ -63,9 +63,9 @@ public class ClientImpl extends UnicastRemoteObject
       return true;
    }*/
    @Override
-   public Boolean recibirMensaje(String mensaje, ClientInterface emisor, String alias) throws RemoteException {
-      Client client = new Client(alias,emisor);
-      this.cliente.addMensaje(mensaje,client);
+   public Boolean recibirMensaje(String mensaje) throws RemoteException {
+      //this.cliente.addMensaje(mensaje);
+      System.out.println("Mensaje recibido: "+mensaje);
       return true;
    }
 

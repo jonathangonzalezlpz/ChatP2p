@@ -130,17 +130,20 @@ public class Client {
         }
     }
 
-    public void addMensaje(String mensaje, Client emisor){
+    public void addMensaje(String mensaje, ClientInterface emisor, String alias){
+        /*Client cliente = new Client();
         Mensaje m = new Mensaje(emisor,mensaje,true);
-        this.mensajes.get(emisor).add(m);
+        this.mensajes.get(emisor).add(m);*/
     }
 
     //ENVIO Y RECEPCION
     public Boolean enviar(Client destinatario, Mensaje m){
         try {
-            destinatario.clientInterface.recibirMensaje(m.getContenido(),destinatario.clientInterface,destinatario.getAlias());
-            this.mensajes.get(destinatario).add(m);
-            return true;
+            if(destinatario.clientInterface.recibirMensaje(m.getContenido())) {
+                this.mensajes.get(destinatario).add(m);
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             System.out.println("Exception enviar Client: "+e);
             return false;

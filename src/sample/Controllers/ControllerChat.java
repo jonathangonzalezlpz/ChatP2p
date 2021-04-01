@@ -171,7 +171,7 @@ public class ControllerChat {
     //Métodos control gráfica
 
     void cargarConversacion(Client destinatario){
-        this.panelConversacion = new VBox(); //limpiamos una posible conversacion anterior
+        this.panelConversacion.getChildren().clear();//limpiamos una posible conversacion anterior
         this.txt_receptor.setText(destinatario.getAlias());
         this.mensajes_destinatario = this.client.getMensajes().get(destinatario);
         for(Mensaje m : this.mensajes_destinatario)
