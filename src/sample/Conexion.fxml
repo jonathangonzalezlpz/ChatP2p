@@ -33,7 +33,7 @@
                   </Text>
                   <TextField fx:id="txtfield_port" layoutX="189.0" layoutY="105.0" text="1099" />
                   <Button fx:id="btnConectar" layoutX="178.0" layoutY="213.0" mnemonicParsing="false" onAction="#Conectar" text="Conectar" />
-                  <TextField fx:id="txtfield_alias" layoutX="189.0" layoutY="160.0" text="Jesus" />
+                  <TextField fx:id="txtfield_alias" layoutX="189.0" layoutY="160.0" />
                   <Text layoutX="116.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alias : ">
                      <font>
                         <Font size="14.0" />

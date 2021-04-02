@@ -1,5 +1,7 @@
 package sample.RMI;
 
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -38,6 +40,7 @@ public class Client {
     private StringProperty conectado;
     private ObservableList<Client> usuarios_sesion = FXCollections.observableArrayList(); //Observable porque los cambios repercuten en la gráfica
     private HashMap<ClientInterface, ObservableList<Mensaje>> mensajes;
+    private StringProperty mensajesNoLeidos;
 
     //Constructores
     public Client(String alias){
@@ -48,6 +51,7 @@ public class Client {
         this.alias = alias;
         this.clientInterface = clientInterface;
         this.conectado = new SimpleStringProperty("En Linea");
+        this.mensajesNoLeidos = new SimpleStringProperty("0");
     }
 
     //Constructor con conexión a servidor y registro en el callback
@@ -123,14 +127,23 @@ public class Client {
         }
     }
 
+
+    //Recepcion
     public void addMensaje(String mensaje, String alias_emisor, ClientInterface emisor_interface){
         Client c = new Client(alias_emisor, emisor_interface);
         Mensaje m = new Mensaje(c,mensaje,true);
         this.mensajes.get(emisor_interface).add(m);
+        for(Client u: usuarios_sesion){
+            if(u.equals(u)){
+                int aux = Integer.parseInt(u.mensajesNoLeidos.get())+1;
+                u.mensajesNoLeidos.setValue(aux+"");
+                break;
+            }
+        }
         System.out.println("Mensaje añadido a la cola de mensajes.");
     }
 
-    //ENVIO Y RECEPCION
+    //ENVIO
     public Boolean enviar(Client destinatario, Mensaje m){
         try {
             if(destinatario.clientInterface.recibirMensaje(m.getContenido(), m.getAutor().getAlias(), this.clientInterface)) {
@@ -141,6 +154,16 @@ public class Client {
         } catch (Exception e) {
             System.out.println("Exception enviar Client: "+e);
             return false;
+        }
+    }
+
+    public void leer(Client destinatario){
+        for(Client u: usuarios_sesion){
+            if(u.equals(u)){
+                int aux = 0;
+                u.mensajesNoLeidos.setValue(aux+"");
+                break;
+            }
         }
     }
 
@@ -167,6 +190,18 @@ public class Client {
 
     public HashMap<ClientInterface, ObservableList<Mensaje>> getMensajes() {
         return mensajes;
+    }
+
+    public String getMensajesNoLeidos() {
+        return mensajesNoLeidos.get();
+    }
+
+    public StringProperty mensajesNoLeidosProperty() {
+        return mensajesNoLeidos;
+    }
+
+    public void setMensajesNoLeidos(String mensajesNoLeidos) {
+        this.mensajesNoLeidos.set(mensajesNoLeidos);
     }
 
     //EQUALS, dos usuarios son el mismo si coincide al alias

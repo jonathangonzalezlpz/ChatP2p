@@ -35,6 +35,8 @@ public class ControllerChat {
     private TableColumn<Client, String> idUserColumn;
     @FXML
     private TableColumn<Client, String> idStateColumn;
+    @FXML
+    private TableColumn<Client, String> idNLColumn;
 
     @FXML
     private Button btnCargar;
@@ -119,6 +121,10 @@ public class ControllerChat {
             return cellData.getValue().getConectado();
         });
 
+        idNLColumn.setCellValueFactory(cellData -> {
+            return cellData.getValue().mensajesNoLeidosProperty();
+        });
+
     }
 
     /**
@@ -145,6 +151,7 @@ public class ControllerChat {
         this.panelConversacion.getChildren().clear();//limpiamos una posible conversacion anterior
         this.txt_receptor.setText(destinatario.getAlias());
         this.mensajes_destinatario = this.client.getMensajes().get(destinatario.getClientInterface());
+        this.client.leer(destinatario);
         for(Mensaje m : this.mensajes_destinatario)
             this.mostrarMensaje(m);
 
