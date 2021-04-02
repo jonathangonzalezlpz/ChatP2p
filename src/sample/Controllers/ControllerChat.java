@@ -37,9 +37,6 @@ public class ControllerChat {
     private TableColumn<Client, String> idStateColumn;
 
     @FXML
-    private Button btnSalir;
-
-    @FXML
     private Button btnCargar;
 
     @FXML
@@ -52,6 +49,9 @@ public class ControllerChat {
 
     @FXML
     private Text txt_receptor;
+
+    @FXML
+    private Text txt_usuario;
 
     @FXML
     private HBox cabeceraChat;
@@ -83,32 +83,9 @@ public class ControllerChat {
     public ControllerChat() {
         this.colorE = "#F2B591";
         this.colorR = "#D9A796";
-        /*this.userTable.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public synchronized void handle(MouseEvent mouseEvent) {
-                if(mouseEvent.getButton().equals(MouseButton.PRIMARY)){
-                    if(mouseEvent.getClickCount() == 2){
-                        System.out.println("Double clicked");
-                        destinatario = userTable.getSelectionModel().getSelectedItem();
-                        cargarConversacion(destinatario);
-                    }
-                }
-            }
-        });*/
     }
 
-    //METODOS JAVA FX
-    @FXML
-    void desconetar(ActionEvent event) {
-        this.client.desconectar();
-    }
 
-    /*@FXML
-    void selectUser(ActionEvent event) {
-        //destinatario = userTable.getSelectionModel().getSelectedItem();
-        //cargarConversacion(destinatario);
-        System.out.println("EEEE");
-    }*/
 
     @FXML
     void enviar(ActionEvent event) {
@@ -157,6 +134,7 @@ public class ControllerChat {
     public void setCliente(Client client) {
         this.client = client;
         this.userData = client.getUsuarios_sesion();
+        this.txt_usuario.setText(this.client.getAlias());
         // Add observable list data to the table
         userTable.setItems(this.userData);
     }

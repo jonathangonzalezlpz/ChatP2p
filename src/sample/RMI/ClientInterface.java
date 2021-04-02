@@ -1,7 +1,5 @@
 package sample.RMI;
 
-import javafx.beans.property.StringProperty;
-import sample.Model.Mensaje;
 
 import java.rmi.*;
 import java.util.Vector;

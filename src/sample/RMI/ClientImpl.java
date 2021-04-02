@@ -54,29 +54,23 @@ public class ClientImpl extends UnicastRemoteObject
       return returnMessage;
    }
 
-   //Envio y recepción de Mensajes
+   //Recepción de Mensajes
 
-
-   /*@Override
-   public Boolean recibirMensaje(Mensaje mensaje) throws RemoteException {
-      this.cliente.addMensaje(mensaje);
-      return true;
-   }*/
    @Override
-   public synchronized Boolean recibirMensaje(String mensaje, String alias_emisor, ClientInterface emisor_interface) {
+   public synchronized Boolean recibirMensaje(String mensaje, String alias_emisor, ClientInterface emisor_interface) throws RemoteException{
       this.cliente.addMensaje(mensaje, alias_emisor, emisor_interface);
       System.out.println("Mensaje recibido de "+alias_emisor+" con interfaz "+emisor_interface+": "+mensaje);
       return true;
    }
 
    //Obtiene el alias que utiliza el cliente
-   public String getAlias() {
+   public String getAlias() throws RemoteException {
       return alias;
    }
 
    //permite fijar el alias del cliente
    @Override
-   public void setAlias(String alias) {
+   public void setAlias(String alias) throws RemoteException {
       this.alias = alias;
       this.cliente.setAlias(alias);
    }

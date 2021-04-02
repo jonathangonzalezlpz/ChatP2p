@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import java.util.*?>
@@ -38,6 +39,14 @@
                         <Font size="14.0" />
                      </font>
                   </Text>
+                  <Text fx:id="txt_error" fill="#f50505" layoutX="260.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" text="!!!" visible="false">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </Text>
                </children>
             </AnchorPane>
             <Text layoutX="187.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bienvenido al Chat P2P" textAlignment="CENTER">
@@ -45,6 +54,30 @@
                   <Font name="System Bold" size="18.0" />
                </font>
             </Text>
+            <AnchorPane layoutX="50.0" layoutY="393.0" prefHeight="140.0" prefWidth="449.0">
+               <children>
+                  <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="INFORMACIÓN:">
+                     <font>
+                        <Font name="System Bold" size="16.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="21.0" layoutY="58.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Indique puerto y nombre de host del servidor al que desea conectarse.">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="21.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Indique el Alias o nombre de usuario que desea utilizar, ">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="21.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="el servidor lo analizará y si está ocupado generará un alias similar válido.">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+               </children>
+            </AnchorPane>
          </children></Pane>
     </children>
 </GridPane>

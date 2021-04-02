@@ -24,13 +24,12 @@
                   <Font size="18.0" />
                </font>
             </Text>
-            <TableView fx:id="userTable" layoutX="25.0" layoutY="54.0" prefHeight="470.0" prefWidth="215.0">
+            <TableView fx:id="userTable" layoutX="26.0" layoutY="75.0" prefHeight="470.0" prefWidth="215.0">
               <columns>
                 <TableColumn fx:id="idUserColumn" prefWidth="112.0" text="Usuarios" />
                   <TableColumn fx:id="idStateColumn" prefWidth="102.0" text="Estado" />
               </columns>
             </TableView>
-            <Button fx:id="btnSalir" layoutX="25.0" layoutY="558.0" mnemonicParsing="false" onAction="#desconetar" prefHeight="28.0" prefWidth="64.0" text="Salir" />
             <Pane layoutX="248.0" layoutY="54.0" prefHeight="491.0" prefWidth="284.0">
                <children>
                   <ScrollPane fx:id="pane_cconversacion" hbarPolicy="NEVER" layoutX="1.0" layoutY="46.0" prefHeight="348.0" prefWidth="282.0" vbarPolicy="ALWAYS">
@@ -59,7 +58,17 @@
                   <Button fx:id="btn_enviar" layoutX="137.0" layoutY="440.0" mnemonicParsing="false" onAction="#enviar" text="&gt;" />
                </children>
             </Pane>
-            <Button fx:id="btnCargar" layoutX="101.0" layoutY="531.0" mnemonicParsing="false" onAction="#cargarConversacion" prefHeight="28.0" prefWidth="64.0" text="Cargar" />
+            <Button fx:id="btnCargar" layoutX="101.0" layoutY="545.0" mnemonicParsing="false" onAction="#cargarConversacion" prefHeight="28.0" prefWidth="64.0" text="Cargar" />
+            <Text fx:id="txt_usuario" layoutX="70.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="143.0126953125">
+               <font>
+                  <Font name="Arial" size="16.0" />
+               </font>
+            </Text>
+            <Text fx:id="txt_receptor11" layoutX="26.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TÚ :" wrappingWidth="44.0">
+               <font>
+                  <Font name="Arial Bold" size="18.0" />
+               </font>
+            </Text>
          </children>
       </Pane>
    </children>

@@ -14,13 +14,13 @@ public class ServerImpl extends UnicastRemoteObject
      implements ServerInterface {
 
    private Vector clientList; //Lista de clientes conectados al servidor
-   private Vector clientAlias; //Lista con los alias de dichos clientes, mejora de rendimiento
+   private Vector clientAlias; //Lista con los alias de los clientes desde que se arranco el servidor
 
 
    public ServerImpl() throws RemoteException {
       super( );
-     clientList = new Vector();
-     clientAlias = new Vector();
+      clientList = new Vector();
+      clientAlias = new Vector();
    }
 
   public String sayHello( )   
@@ -56,7 +56,7 @@ public class ServerImpl extends UnicastRemoteObject
     ClientInterface callbackClientObject)
     throws RemoteException{
     if (clientList.removeElement(callbackClientObject)) {
-      clientAlias.removeElement(callbackClientObject.getAlias());
+      //clientAlias.removeElement(callbackClientObject.getAlias()); El alias lo dejamos, otros usuarios pueden tener archivados chats asociados a ese alias
       System.out.println("Unregistered client ");
       doCallbacksUsuarioDesconectado(callbackClientObject);
     } else {
@@ -109,5 +109,4 @@ public class ServerImpl extends UnicastRemoteObject
         System.out.println("********************************\n" +
                 "Server completed callbacks ---");
     }
-
 }// end ServerImpl class

@@ -51,7 +51,7 @@ public class Client {
     }
 
     //Constructor con conexión a servidor y registro en el callback
-    public Client(String PortNum, String hostName, String alias) {
+    public Client(String PortNum, String hostName, String alias) throws Exception{
         try {
             this.alias = alias;
             this.mensajes = new HashMap<>();
@@ -71,6 +71,7 @@ public class Client {
         } catch (Exception e) {
             System.out.println(
                     "Exception register Client: " + e);
+            throw new Exception("Problema de conexión con el servidor.");
         } // end catch
     }
 
@@ -106,16 +107,8 @@ public class Client {
     public void addUsers_linea(ClientInterface new_user){
         try {
             Client new_client = new Client(new_user.getAlias(), new_user);
-            if (this.usuarios_sesion.contains(new_client)) { //Posible reconexion
-                for (Client c : this.usuarios_sesion) {
-                    if (c.equals(new_client)){
-                        c.conectado.setValue("En Linea");
-                    }
-                }
-            }else {
-                this.usuarios_sesion.add(new_client);
-                this.mensajes.put(new_user,FXCollections.observableArrayList());
-            }
+            this.usuarios_sesion.add(new_client);
+            this.mensajes.put(new_user,FXCollections.observableArrayList());
         }catch(Exception ex){
                 System.out.println("Exception GetAlias in addUsers_linea ClientImpl: "+ex);
         }
@@ -152,8 +145,6 @@ public class Client {
     }
 
     //GETTERS Y SETTERS
-
-
     public ClientInterface getClientInterface() {
         return clientInterface;
     }
