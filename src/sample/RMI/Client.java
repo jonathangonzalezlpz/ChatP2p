@@ -149,7 +149,6 @@ public class Client {
             System.out.println("Exception enviar Client: "+e);
             return false;
         }
-
     }
 
     //GETTERS Y SETTERS

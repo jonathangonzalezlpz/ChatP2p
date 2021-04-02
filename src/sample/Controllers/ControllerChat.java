@@ -1,5 +1,6 @@
 package sample.Controllers;
 
+import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -94,14 +95,6 @@ public class ControllerChat {
                 }
             }
         });*/
-        /*this.mensajes_destinatario.addListener(new ListChangeListener<Mensaje>() {
-            @Override
-            public void onChanged(Change<? extends Mensaje> c) {
-                for(Mensaje m: c.getAddedSubList()){
-                    mostrarMensaje(m);
-                }
-            }
-        });*/
     }
 
     //METODOS JAVA FX
@@ -123,7 +116,7 @@ public class ControllerChat {
             if(this.destinatario.getConectado().get().equals("En Linea")){
                 Mensaje m = new Mensaje(this.client, this.txtfield_mensaje.getText(), false);
                 if(this.client.enviar(this.destinatario,m)){
-                    this.mostrarMensaje(m);
+                    //this.mostrarMensaje(m);
                     this.txtfield_mensaje.setText("");
                 }
             }
@@ -176,6 +169,21 @@ public class ControllerChat {
         this.mensajes_destinatario = this.client.getMensajes().get(destinatario.getClientInterface());
         for(Mensaje m : this.mensajes_destinatario)
             this.mostrarMensaje(m);
+
+        this.mensajes_destinatario.addListener(new ListChangeListener<Mensaje>() {
+            @Override
+            public void onChanged(Change<? extends Mensaje> c) {
+                c.next();
+                for(Mensaje m: c.getAddedSubList()){
+                    Platform.runLater(new Runnable() {
+                        @Override
+                        public void run() {
+                            mostrarMensaje( m );
+                        }
+                    });
+                }
+            }
+        });
     }
 
     void mostrarMensaje( Mensaje mensaje){
