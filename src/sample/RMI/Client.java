@@ -37,7 +37,7 @@ public class Client {
     private ClientInterface clientInterface;
     private StringProperty conectado;
     private ObservableList<Client> usuarios_sesion = FXCollections.observableArrayList(); //Observable porque los cambios repercuten en la gráfica
-    private HashMap<Client, ObservableList<Mensaje>> mensajes;
+    private HashMap<ClientInterface, ObservableList<Mensaje>> mensajes;
 
     //Constructores
     public Client(String alias){
@@ -94,7 +94,7 @@ public class Client {
                 Client client = new Client(ci.getAlias(), ci);
                 if(!client.getAlias().equals(this.alias)) //A el mismo no se añade
                     this.usuarios_sesion.add(client);
-                    this.mensajes.put(client,FXCollections.observableArrayList());
+                    this.mensajes.put(ci,FXCollections.observableArrayList());
                 }
         }catch (Exception ex){
             System.out.println("Exception setUsers_linea Cliente: "+ex);
@@ -114,7 +114,7 @@ public class Client {
                 }
             }else {
                 this.usuarios_sesion.add(new_client);
-                this.mensajes.put(new_client,FXCollections.observableArrayList());
+                this.mensajes.put(new_user,FXCollections.observableArrayList());
             }
         }catch(Exception ex){
                 System.out.println("Exception GetAlias in addUsers_linea ClientImpl: "+ex);
@@ -130,17 +130,18 @@ public class Client {
         }
     }
 
-    public void addMensaje(String mensaje, ClientInterface emisor, String alias){
-        /*Client cliente = new Client();
-        Mensaje m = new Mensaje(emisor,mensaje,true);
-        this.mensajes.get(emisor).add(m);*/
+    public void addMensaje(String mensaje, String alias_emisor, ClientInterface emisor_interface){
+        Client c = new Client(alias_emisor, emisor_interface);
+        Mensaje m = new Mensaje(c,mensaje,true);
+        this.mensajes.get(emisor_interface).add(m);
+        System.out.println("Mensaje añadido a la cola de mensajes.");
     }
 
     //ENVIO Y RECEPCION
     public Boolean enviar(Client destinatario, Mensaje m){
         try {
-            if(destinatario.clientInterface.recibirMensaje(m.getContenido())) {
-                this.mensajes.get(destinatario).add(m);
+            if(destinatario.clientInterface.recibirMensaje(m.getContenido(), m.getAutor().getAlias(), this.clientInterface)) {
+                this.mensajes.get(destinatario.clientInterface).add(m);
                 return true;
             }
             return false;
@@ -152,6 +153,12 @@ public class Client {
     }
 
     //GETTERS Y SETTERS
+
+
+    public ClientInterface getClientInterface() {
+        return clientInterface;
+    }
+
     public ObservableList<Client> getUsuarios_sesion() {
         return usuarios_sesion;
     }
@@ -168,7 +175,7 @@ public class Client {
         return conectado;
     }
 
-    public HashMap<Client, ObservableList<Mensaje>> getMensajes() {
+    public HashMap<ClientInterface, ObservableList<Mensaje>> getMensajes() {
         return mensajes;
     }
 

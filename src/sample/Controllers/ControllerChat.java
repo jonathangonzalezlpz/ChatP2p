@@ -173,7 +173,7 @@ public class ControllerChat {
     void cargarConversacion(Client destinatario){
         this.panelConversacion.getChildren().clear();//limpiamos una posible conversacion anterior
         this.txt_receptor.setText(destinatario.getAlias());
-        this.mensajes_destinatario = this.client.getMensajes().get(destinatario);
+        this.mensajes_destinatario = this.client.getMensajes().get(destinatario.getClientInterface());
         for(Mensaje m : this.mensajes_destinatario)
             this.mostrarMensaje(m);
     }
