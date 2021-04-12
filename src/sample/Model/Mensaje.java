@@ -1,6 +1,6 @@
 package sample.Model;
 
-import sample.RMI.Client;
+import sample.RMI.Client.Client;
 
 import java.io.Serializable;
 

@@ -1,29 +1,15 @@
 package sample;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 import sample.Controllers.ControllerChat;
 import sample.Controllers.ControllerConexion;
-import sample.Model.User;
-import sample.RMI.Client;
-import sample.RMI.ClientImpl;
-import sample.RMI.ClientInterface;
-import sample.RMI.ServerInterface;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.InetAddress;
-import java.net.MulticastSocket;
-import java.rmi.Naming;
+import sample.RMI.Client.Client;
 
 import static java.lang.System.exit;
 

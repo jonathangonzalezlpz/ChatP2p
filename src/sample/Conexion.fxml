@@ -18,35 +18,52 @@
     <children>
         <Pane prefHeight="600.0" prefWidth="550.0">
          <children>
-            <AnchorPane layoutX="63.0" layoutY="117.0" prefHeight="276.0" prefWidth="424.0">
+            <AnchorPane layoutX="51.0" layoutY="114.0" prefHeight="279.0" prefWidth="449.0">
                <children>
-                  <TextField fx:id="txtfield_hostname" layoutX="189.0" layoutY="42.0" text="localhost" />
-                  <Text layoutX="80.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Host Name :">
+                  <TextField fx:id="txtfield_hostname" layoutX="107.0" layoutY="42.0" prefHeight="27.0" prefWidth="143.0" text="localhost" />
+                  <Text layoutX="22.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Host Name :">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <Text layoutX="72.0" layoutY="124.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port Number :">
+                  <Text layoutX="260.0" layoutY="61.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Port Number :">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <TextField fx:id="txtfield_port" layoutX="189.0" layoutY="105.0" text="1099" />
-                  <Button fx:id="btnConectar" layoutX="178.0" layoutY="213.0" mnemonicParsing="false" onAction="#Conectar" text="Conectar" />
-                  <TextField fx:id="txtfield_alias" layoutX="189.0" layoutY="160.0" />
-                  <Text layoutX="116.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Alias : ">
+                  <TextField fx:id="txtfield_port" layoutX="350.0" layoutY="42.0" prefHeight="27.0" prefWidth="72.0" text="1099" />
+                  <Button fx:id="btnIniciarSesion" layoutX="126.0" layoutY="238.0" mnemonicParsing="false" onAction="#Conectar" text="Iniciar Sesion" />
+                  <TextField fx:id="txtfield_username" layoutX="199.0" layoutY="127.0" />
+                  <Text layoutX="107.0" layoutY="146.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Username:">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <Text fx:id="txt_error" fill="#f50505" layoutX="260.0" layoutY="235.0" strokeType="OUTSIDE" strokeWidth="0.0" text="!!!" visible="false">
+                  <Text fx:id="txt_error" fill="#f50505" layoutX="127.0" layoutY="224.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Compruebe sus credenciales" visible="false">
                      <font>
-                        <Font size="24.0" />
+                        <Font size="16.0" />
                      </font>
                      <effect>
                         <DropShadow />
                      </effect>
                   </Text>
+                  <Text layoutX="22.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="SERVIDOR:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="24.0" layoutY="113.0" strokeType="OUTSIDE" strokeWidth="0.0" text="USUARIO:">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Text>
+                  <Text layoutX="108.0" layoutY="190.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Password:">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </Text>
+                  <PasswordField fx:id="psfield_password" layoutX="199.0" layoutY="172.0" prefHeight="27.0" prefWidth="161.0" />
+                  <Button fx:id="btnRegistro" layoutX="240.0" layoutY="238.0" mnemonicParsing="false" onAction="#Registrar" prefHeight="27.0" prefWidth="90.0" text="Registrarse" />
                </children>
             </AnchorPane>
             <Text layoutX="187.0" layoutY="97.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Bienvenido al Chat P2P" textAlignment="CENTER">
@@ -66,12 +83,12 @@
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <Text layoutX="21.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Indique el Alias o nombre de usuario que desea utilizar, ">
+                  <Text layoutX="21.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="- Indique su nombre de usuario y contraseña de registro o">
                      <font>
                         <Font size="14.0" />
                      </font>
                   </Text>
-                  <Text layoutX="21.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="el servidor lo analizará y si está ocupado generará un alias similar válido.">
+                  <Text layoutX="31.0" layoutY="105.0" strokeType="OUTSIDE" strokeWidth="0.0" text="inicio de sesión, el servidor lo analizará.">
                      <font>
                         <Font size="14.0" />
                      </font>

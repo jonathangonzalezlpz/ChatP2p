@@ -1,21 +1,15 @@
-package sample.RMI;
+package sample.RMI.Client;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import sample.Controllers.ControllerChat;
 import sample.Model.Mensaje;
 import sample.Model.User;
-import sample.RMI.ClientImpl;
-import sample.RMI.ClientInterface;
-import sample.RMI.ServerInterface;
+import sample.RMI.Server.ServerInterface;
 
-import java.io.*;
+import java.io.Serializable;
 import java.rmi.*;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.Vector;
@@ -32,32 +26,36 @@ import java.util.Vector;
  * Autor: Jonathan González López
  */
 
-public class Client {
+public class Client implements Serializable {
 
-    private String alias;
+    private String username;
+    private String password;
     private ServerInterface server;
     private ClientInterface clientInterface;
     private StringProperty conectado;
     private ObservableList<Client> usuarios_sesion = FXCollections.observableArrayList(); //Observable porque los cambios repercuten en la gráfica
-    private HashMap<ClientInterface, ObservableList<Mensaje>> mensajes;
+    private HashMap<String, ObservableList<Mensaje>> mensajes;
     private StringProperty mensajesNoLeidos;
 
     //Constructores
     public Client(String alias){
-        this.alias = alias;
+        this.username = alias;
+        this.conectado = new SimpleStringProperty("Desconectado");
+        this.mensajesNoLeidos = new SimpleStringProperty("0");
     }
 
     public Client(String alias, ClientInterface clientInterface){
-        this.alias = alias;
+        this.username = alias;
         this.clientInterface = clientInterface;
         this.conectado = new SimpleStringProperty("En Linea");
         this.mensajesNoLeidos = new SimpleStringProperty("0");
     }
 
     //Constructor con conexión a servidor y registro en el callback
-    public Client(String PortNum, String hostName, String alias) throws Exception{
+    public Client(String PortNum, String hostName, String username, String password) throws Exception{
         try {
-            this.alias = alias;
+            this.username = username;
+            this.password = password;
             this.mensajes = new HashMap<>();
             this.conectado = new SimpleStringProperty("En Linea");
             String registryURL = "rmi://"+hostName+":" + PortNum + "/callback";
@@ -68,10 +66,7 @@ public class Client {
             System.out.println("Lookup completed ");
             System.out.println("Server said " + this.server.sayHello());
             this.clientInterface =
-                    new ClientImpl(this.alias.toString(), this);
-            // register for callback
-            this.server.registerForCallback(this.clientInterface);
-            System.out.println("Registered for callback.");
+                    new ClientImpl(this.username.toString(), this);
         } catch (Exception e) {
             System.out.println(
                     "Exception register Client: " + e);
@@ -79,10 +74,33 @@ public class Client {
         } // end catch
     }
 
+    public void registrarse() throws Exception{
+        try {
+            this.server.newUser(this.clientInterface, this.username, this.password);
+        }catch (Exception e){
+            System.out.println(
+                    "Exception register Client: " + e);
+            throw new Exception("Problema de conexión con el servidor.");
+        }
+
+    }
+
+    public void iniciarSesion() throws Exception{
+        // register for callback
+        try{
+            this.server.registerForCallback(this.clientInterface, this.username, this.password);
+            System.out.println("Registered for callback.");
+        }catch (Exception e){
+            System.out.println(
+                    "Exception login Client: " + e);
+            throw new Exception("Problema de inicio sesión con el servidor.");
+        }
+    }
+
     //Desconexión del Servidor y unregister del callback
     public void desconectar(){
         try{
-            this.server.unregisterForCallback(this.clientInterface);
+            this.server.unregisterForCallback(this.clientInterface, this.username, this.password);
             this.conectado.setValue("Desconectado");
             System.out.println("Unregistered for callback.");
         }catch(Exception e){
@@ -93,28 +111,38 @@ public class Client {
 
     //Control de usuarios sesión
     //Iniciar el vector en el momento que nos conectamos al servidor
-    public void setUsers_linea(Vector<ClientInterface> users_linea) {
-        try{
-            for(ClientInterface ci: users_linea){
-                Client client = new Client(ci.getAlias(), ci);
-                if(!client.getAlias().equals(this.alias)) //A el mismo no se añade
-                    this.usuarios_sesion.add(client);
-                    this.mensajes.put(ci,FXCollections.observableArrayList());
-                }
-        }catch (Exception ex){
-            System.out.println("Exception setUsers_linea Cliente: "+ex);
+    public void setAmigos(Vector<String> users_linea) {
+        for(String u: users_linea){
+            Client client = new Client(u);
+            if(!client.getUsername().equals(this.username)) //A el mismo no se añade
+                this.usuarios_sesion.add(client);
+            this.mensajes.put(u,FXCollections.observableArrayList());
+        }
+
+    }
+
+    public void setUsers_linea(Vector<User> users_linea) {
+        for(User u: users_linea){
+            Client c = new Client(u.getUsername(),u.getClientInterface());
+            this.usuarios_sesion.remove(c);
+            this.usuarios_sesion.add(c);
         }
 
     }
 
     //Añadir usuarios nuevos en línea
-    public void addUsers_linea(ClientInterface new_user){
-        try {
-            Client new_client = new Client(new_user.getAlias(), new_user);
+    public void addUsers_linea(User new_user) {
+        Client new_client = new Client(new_user.getUsername(), new_user.getClientInterface());
+        if (this.usuarios_sesion.contains(new_client)) {
+            for (Client c : this.usuarios_sesion) {
+                if (c.username.equals(new_client.getUsername())) {
+                    c.clientInterface = new_client.getClientInterface();
+                    c.conectado.setValue("En Linea");
+                }
+            }
+        } else {
             this.usuarios_sesion.add(new_client);
-            this.mensajes.put(new_user,FXCollections.observableArrayList());
-        }catch(Exception ex){
-                System.out.println("Exception GetAlias in addUsers_linea ClientImpl: "+ex);
+            this.mensajes.put(new_user.getUsername(), FXCollections.observableArrayList());
         }
     }
 
@@ -132,7 +160,7 @@ public class Client {
     public void addMensaje(String mensaje, String alias_emisor, ClientInterface emisor_interface){
         Client c = new Client(alias_emisor, emisor_interface);
         Mensaje m = new Mensaje(c,mensaje,true);
-        this.mensajes.get(emisor_interface).add(m);
+        this.mensajes.get(alias_emisor).add(m);
         for(Client u: usuarios_sesion){
             if(u.equals(u)){
                 int aux = Integer.parseInt(u.mensajesNoLeidos.get())+1;
@@ -146,8 +174,8 @@ public class Client {
     //ENVIO
     public Boolean enviar(Client destinatario, Mensaje m){
         try {
-            if(destinatario.clientInterface.recibirMensaje(m.getContenido(), m.getAutor().getAlias(), this.clientInterface)) {
-                this.mensajes.get(destinatario.clientInterface).add(m);
+            if(destinatario.clientInterface.recibirMensaje(m.getContenido(), m.getAutor().getUsername(), this.clientInterface)) {
+                this.mensajes.get(destinatario.getUsername()).add(m);
                 return true;
             }
             return false;
@@ -176,19 +204,19 @@ public class Client {
         return usuarios_sesion;
     }
 
-    public String getAlias() {
-        return alias;
+    public String getUsername() {
+        return username;
     }
 
-    public void setAlias(String alias) {
-        this.alias = alias;
+    public void setUsername(String alias) {
+        this.username = alias;
     }
 
     public StringProperty getConectado() {
         return conectado;
     }
 
-    public HashMap<ClientInterface, ObservableList<Mensaje>> getMensajes() {
+    public HashMap<String, ObservableList<Mensaje>> getMensajes() {
         return mensajes;
     }
 
@@ -210,6 +238,6 @@ public class Client {
         if (this == o) return true;
         if (!(o instanceof Client)) return false;
         Client client = (Client) o;
-        return Objects.equals(getAlias(), client.getAlias()); //MISMO ALIAS
+        return Objects.equals(getUsername(), client.getUsername()); //MISMO ALIAS
     }
 }//end class

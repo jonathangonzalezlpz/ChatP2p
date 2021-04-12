@@ -1,12 +1,8 @@
-package sample.RMI;
+package sample.RMI.Client;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import sample.Model.Mensaje;
 import sample.Model.User;
 
+import java.io.Serializable;
 import java.rmi.*;
 import java.rmi.server.*;
 import java.util.Vector;
@@ -18,7 +14,7 @@ import java.util.Vector;
  */
 
 public class ClientImpl extends UnicastRemoteObject
-     implements ClientInterface {
+     implements ClientInterface, Serializable{
 
    private String alias;
    private Client cliente;
@@ -31,6 +27,14 @@ public class ClientImpl extends UnicastRemoteObject
 
 
    //Permite obtener la lista inicial (momento de la conexion) de usuarios en linea
+   public synchronized String notifyListaAmigos(Vector usuarios){
+      String returnMessage = "Call back notifyListaAmigos received";
+      this.cliente.setAmigos(usuarios);
+      System.out.println("Call back notifyListaAmigos received.");
+      return returnMessage;
+   }
+
+   //Permite obtener la lista inicial (momento de la conexion) de usuarios en linea
    public synchronized String notifyInicio(Vector usuarios){
       String returnMessage = "Call back notifyInicio received";
       this.cliente.setUsers_linea(usuarios);
@@ -39,17 +43,18 @@ public class ClientImpl extends UnicastRemoteObject
    }
 
    //recibe la notificación de un nuevo usuario en línea
-   public synchronized String notifyConnection(ClientInterface new_client){
+   public synchronized String notifyConnection(String username, ClientInterface new_client){
       String returnMessage = "Call back notifyConnection received";
-      this.cliente.addUsers_linea(new_client);
-      System.out.println("Call back notiifyConnection received.");
+      User u = new User(username,new_client);
+      this.cliente.addUsers_linea(u);
+      System.out.println("Call back notifyConnection received.");
       return returnMessage;
    }
 
    //recibe la notificación de la desconexión de un usuario.
-   public synchronized String notifyDesconnection(ClientInterface off_client){
+   public synchronized String notifyDesconnection(User off_client){
       String returnMessage = "Call back notifyDesconnection received";
-      this.cliente.deleteUsers_linea(off_client);
+      this.cliente.deleteUsers_linea(off_client.getClientInterface());
       System.out.println("Call back Desconnection received.");
       return returnMessage;
    }
@@ -64,14 +69,14 @@ public class ClientImpl extends UnicastRemoteObject
    }
 
    //Obtiene el alias que utiliza el cliente
-   public String getAlias() throws RemoteException {
+   public String getUsername() throws RemoteException {
       return alias;
    }
 
    //permite fijar el alias del cliente
    @Override
-   public void setAlias(String alias) throws RemoteException {
+   public void setUsername(String alias) throws RemoteException {
       this.alias = alias;
-      this.cliente.setAlias(alias);
+      this.cliente.setUsername(alias);
    }
 }// end ClientImpl class

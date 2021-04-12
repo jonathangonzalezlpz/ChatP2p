@@ -1,6 +1,9 @@
-package sample.RMI;
+package sample.RMI.Client;
 
 
+import sample.Model.User;
+
+import java.io.Serializable;
 import java.rmi.*;
 import java.util.Vector;
 
@@ -11,23 +14,27 @@ import java.util.Vector;
  */
 
 public interface ClientInterface
-  extends Remote{
+  extends Remote, Serializable {
+
+    //Permite obtener la lista inicial (momento de la conexion) de usuarios en linea
+    public String notifyListaAmigos(Vector usuarios)
+            throws RemoteException;
 
     //Permite obtener la lista inicial (momento de la conexion) de usuarios en linea
     public String notifyInicio(Vector usuarios)
       throws RemoteException;
 
     //recibe la notificación de un nuevo usuario en línea
-    public String notifyConnection(ClientInterface new_client) throws RemoteException;
+    public String notifyConnection(String username, ClientInterface new_client) throws RemoteException;
 
     //recibe la notificación de la desconexión de un usuario.
-    public String notifyDesconnection(ClientInterface off_client) throws RemoteException;
+    public String notifyDesconnection(User off_client) throws RemoteException;
 
     //Obtiene el alias que utiliza el cliente
-    public String getAlias() throws RemoteException;
+    public String getUsername() throws RemoteException;
 
     //permite fijar el alias del cliente
-    public void setAlias(String alias) throws RemoteException;
+    public void setUsername(String alias) throws RemoteException;
 
     //Permite recibir un mensaje
     public Boolean recibirMensaje(String mensaje, String alias_emisor, ClientInterface emisor_interface)

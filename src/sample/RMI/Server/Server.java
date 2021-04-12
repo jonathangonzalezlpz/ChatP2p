@@ -1,4 +1,4 @@
-package sample.RMI;
+package sample.RMI.Server;
 
 import java.rmi.*;
 import java.rmi.registry.Registry;
@@ -26,6 +26,7 @@ public class Server {
         ServerImpl exportedObj = new ServerImpl();
         registryURL = "rmi://localhost:" + portNum + "/callback";
         Naming.rebind(registryURL, exportedObj);
+
         System.out.println("Callback Server ready.");
       }// end try
       catch (Exception re) {

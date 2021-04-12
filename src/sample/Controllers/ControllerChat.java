@@ -2,29 +2,21 @@ package sample.Controllers;
 
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseButton;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 import sample.Main;
 import sample.Model.Mensaje;
-import sample.Model.User;
-import sample.RMI.Client;
-import sample.RMI.ClientInterface;
+import sample.RMI.Client.Client;
 
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
 
 public class ControllerChat {
 
@@ -66,6 +58,9 @@ public class ControllerChat {
 
     @FXML
     private Button btn_enviar;
+
+    @FXML
+    private Button btn_AddFriend;
 
     //ATRIBUTOS NECESARIOS
     private Client client;
@@ -109,13 +104,18 @@ public class ControllerChat {
             cargarConversacion(destinatario);
     }
 
+    @FXML
+    void addFriend(ActionEvent event) {
+
+    }
+
     /**
      Se ejecuta después de que el loader haya sido invocado
      */
     @FXML
     private void initialize() {
         idUserColumn.setCellValueFactory(cellData -> {
-            return new SimpleStringProperty(cellData.getValue().getAlias()); });
+            return new SimpleStringProperty(cellData.getValue().getUsername()); });
 
         idStateColumn.setCellValueFactory(cellData -> {
             return cellData.getValue().getConectado();
@@ -140,7 +140,7 @@ public class ControllerChat {
     public void setCliente(Client client) {
         this.client = client;
         this.userData = client.getUsuarios_sesion();
-        this.txt_usuario.setText(this.client.getAlias());
+        this.txt_usuario.setText(this.client.getUsername());
         // Add observable list data to the table
         userTable.setItems(this.userData);
     }
@@ -149,8 +149,8 @@ public class ControllerChat {
 
     void cargarConversacion(Client destinatario){
         this.panelConversacion.getChildren().clear();//limpiamos una posible conversacion anterior
-        this.txt_receptor.setText(destinatario.getAlias());
-        this.mensajes_destinatario = this.client.getMensajes().get(destinatario.getClientInterface());
+        this.txt_receptor.setText(destinatario.getUsername());
+        this.mensajes_destinatario = this.client.getMensajes().get(destinatario.getUsername());
         this.client.leer(destinatario);
         for(Mensaje m : this.mensajes_destinatario)
             this.mostrarMensaje(m);
@@ -163,6 +163,7 @@ public class ControllerChat {
                     Platform.runLater(new Runnable() {
                         @Override
                         public void run() {
+                            destinatario.setMensajesNoLeidos(0+"");
                             mostrarMensaje( m );
                         }
                     });
@@ -178,10 +179,10 @@ public class ControllerChat {
         else
             colorM = this.colorE;
         Text texto = null;
-        if(mensaje.getAutor().getAlias().equals(this.client.getAlias()))
+        if(mensaje.getAutor().getUsername().equals(this.client.getUsername()))
             texto = new Text("Tu: \n"+mensaje.getContenido());
         else
-            texto = new Text(mensaje.getAutor().getAlias()+"\n"+mensaje.getContenido());
+            texto = new Text(mensaje.getAutor().getUsername()+"\n"+mensaje.getContenido());
         texto.wrappingWidthProperty();
         texto.setWrappingWidth(282);
         VBox contenedor = new VBox();
