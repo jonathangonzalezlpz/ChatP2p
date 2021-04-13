@@ -137,6 +137,82 @@ public class FachadaBD {
     }
 
     //AMIGOS
+    public boolean confirmFriendship(String user1,String user2){
+        Connection con;
+        PreparedStatement stmFriends=null;
+        con=this.conexion;
+
+        try {
+            stmFriends=con.prepareStatement("update friends "+
+                    "set estado = ?"+
+                    "where user1 = ? and user2 = ?");
+            stmFriends.setString(1, "aceptado");
+            stmFriends.setString(2, user2);
+            stmFriends.setString(3, user1);
+            stmFriends.executeUpdate();
+            return true;
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }finally{
+            try {stmFriends.close();} catch (SQLException e){System.out.println("Imposible cerrar cursores");}
+        }
+        return false;
+    }
+    public Vector<String> obtenerPeticionesPendientes(String username){
+        Connection con;
+        PreparedStatement stmPeticiones=null;
+        ResultSet rsPeticiones;
+        Vector resultado = new Vector();
+
+        con=this.conexion;
+        try{
+            stmPeticiones=con.prepareStatement("select * "
+                    +"from friends "
+                    +"where (user2 = ? and estado = ?)");
+            stmPeticiones.setString(1,username);
+            stmPeticiones.setString(2, "Pendiente");
+
+            rsPeticiones=stmPeticiones.executeQuery();
+            while(rsPeticiones.next()){
+                resultado.addElement(rsPeticiones.getString("user1"));
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }finally{
+            try{
+                stmPeticiones.close();
+            }catch(SQLException e){
+                System.out.println("Imposible cerrar cursores.");
+            }
+        }
+        return resultado;
+    }
+
+    public boolean newFriendship(String username1, String username2) {
+        Connection con;
+        PreparedStatement stmUser = null;
+
+        con = this.conexion;
+
+        try {
+            stmUser = con.prepareStatement("insert into friends (user1, user2) " +
+                    "values (?,?)");
+            stmUser.setString(1, username1);
+            stmUser.setString(2, username2);
+            stmUser.executeUpdate();
+            return true;
+
+        } catch (SQLException e) {
+            return false;
+        } finally {
+            try {
+                stmUser.close();
+            } catch (SQLException e) {
+                System.out.println("Imposible cerrar cursores");
+            }
+        }
+    }
+
     public Vector<String> obtenerAmigos(String username){
         Connection con;
         PreparedStatement stmUsers=null;
@@ -205,4 +281,34 @@ public class FachadaBD {
         return false;
     }
 
+    public boolean existeFriendship(String username1, String username2){
+        Connection con;
+        PreparedStatement stmUsers=null;
+        ResultSet rsUsers;
+
+        con=this.conexion;
+        try{
+            stmUsers=con.prepareStatement("select * "
+                    +"from friends "
+                    +"where (user1 = ? and user2 = ?) or (user1 = ? and user2 = ?)");
+            stmUsers.setString(1,username1);
+            stmUsers.setString(2,username2);
+            stmUsers.setString(3,username2);
+            stmUsers.setString(4,username1);
+
+            rsUsers=stmUsers.executeQuery();
+            if(rsUsers.next()){
+                return true;
+            }
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }finally{
+            try{
+                stmUsers.close();
+            }catch(SQLException e){
+                System.out.println("Imposible cerrar cursores.");
+            }
+        }
+        return false;
+    }
 }

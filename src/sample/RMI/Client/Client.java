@@ -36,6 +36,7 @@ public class Client implements Serializable {
     private ObservableList<Client> usuarios_sesion = FXCollections.observableArrayList(); //Observable porque los cambios repercuten en la gráfica
     private HashMap<String, ObservableList<Mensaje>> mensajes;
     private StringProperty mensajesNoLeidos;
+    private ObservableList<String> peticiones_amistad;
 
     //Constructores
     public Client(String alias){
@@ -58,6 +59,7 @@ public class Client implements Serializable {
             this.password = password;
             this.mensajes = new HashMap<>();
             this.conectado = new SimpleStringProperty("En Linea");
+            this.peticiones_amistad = FXCollections.observableArrayList();
             String registryURL = "rmi://"+hostName+":" + PortNum + "/callback";
 
             // find the remote object and cast it to an
@@ -132,18 +134,24 @@ public class Client implements Serializable {
 
     //Añadir usuarios nuevos en línea
     public void addUsers_linea(User new_user) {
-        Client new_client = new Client(new_user.getUsername(), new_user.getClientInterface());
-        if (this.usuarios_sesion.contains(new_client)) {
-            for (Client c : this.usuarios_sesion) {
-                if (c.username.equals(new_client.getUsername())) {
-                    c.clientInterface = new_client.getClientInterface();
-                    c.conectado.setValue("En Linea");
+        if(new_user.getClientInterface()!=null){
+            Client new_client = new Client(new_user.getUsername(), new_user.getClientInterface());
+            if (this.usuarios_sesion.contains(new_client)) {
+                for (Client c : this.usuarios_sesion) {
+                    if (c.username.equals(new_client.getUsername())) {
+                        c.clientInterface = new_client.getClientInterface();
+                        c.conectado.setValue("En Linea");
+                    }
                 }
+            } else {
+                this.usuarios_sesion.add(new_client);
+                this.mensajes.put(new_user.getUsername(), FXCollections.observableArrayList());
             }
-        } else {
-            this.usuarios_sesion.add(new_client);
-            this.mensajes.put(new_user.getUsername(), FXCollections.observableArrayList());
+        }else {
+            Client friend = new Client(new_user.getUsername());
+            this.usuarios_sesion.add(friend);
         }
+
     }
 
     //Pasar usuarios de estado en linea a DESCONECTADO
@@ -162,7 +170,7 @@ public class Client implements Serializable {
         Mensaje m = new Mensaje(c,mensaje,true);
         this.mensajes.get(alias_emisor).add(m);
         for(Client u: usuarios_sesion){
-            if(u.equals(u)){
+            if(u.getUsername().equals(alias_emisor)){
                 int aux = Integer.parseInt(u.mensajesNoLeidos.get())+1;
                 u.mensajesNoLeidos.setValue(aux+"");
                 break;
@@ -220,6 +228,10 @@ public class Client implements Serializable {
         return mensajes;
     }
 
+    public ObservableList<String> getPeticiones_amistad() {
+        return peticiones_amistad;
+    }
+
     public String getMensajesNoLeidos() {
         return mensajesNoLeidos.get();
     }
@@ -230,6 +242,43 @@ public class Client implements Serializable {
 
     public void setMensajesNoLeidos(String mensajesNoLeidos) {
         this.mensajesNoLeidos.set(mensajesNoLeidos);
+    }
+
+    public void setPeticiones_amistad(Vector<String> peticiones){
+        for(String p: peticiones){
+            this.peticiones_amistad.add(p);
+        }
+    }
+
+    //AÑADIR AMIGO
+    public Boolean addFriend(String friend){
+        try{
+            if(this.server.newFriendship(this.username, this.password, friend))
+                return true;
+            else
+                return false;
+        }catch (Exception e){
+            System.out.println("Exception addFriend Client: "+e);
+            return false;
+        }
+    }
+
+    //Añadir Petición de Amistad
+    public void addPeticion(String emisor){
+        this.peticiones_amistad.add(emisor);
+    }
+
+    public void deletePeticion(String emisor){
+        this.peticiones_amistad.remove(emisor);
+    }
+
+    public Boolean aceptarPeticion(String friend){
+        try {
+            return this.server.acceptFriend(this.username,this.password,friend);
+        } catch (Exception e){
+            System.out.println("Exception acceptarPeticion Client: "+e);
+        }
+        return false;
     }
 
     //EQUALS, dos usuarios son el mismo si coincide al alias

@@ -28,4 +28,10 @@ public interface ServerInterface extends Remote {
   public void unregisterForCallback(
     ClientInterface callbackClientObject, String username, String password)
     throws RemoteException;
+
+  //AMIGOS
+  //Permite añadir un nuevo amigo y enviarle la petición a este
+  public Boolean newFriendship(String user, String password, String friend) throws RemoteException;
+
+  public Boolean acceptFriend(String user, String password, String friend) throws RemoteException;
 }

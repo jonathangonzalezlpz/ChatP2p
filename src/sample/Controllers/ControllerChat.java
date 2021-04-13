@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
@@ -60,7 +61,28 @@ public class ControllerChat {
     private Button btn_enviar;
 
     @FXML
+    private TextField txtfield_friend;
+
+    @FXML
     private Button btn_AddFriend;
+
+    @FXML
+    private Button btnAccept;
+
+    @FXML
+    private Button btnReject;
+
+    @FXML
+    private TableView<String> friendsTable;
+
+    @FXML
+    private TableColumn<String, String> idFriendColumn;
+
+    @FXML
+    private Text txt_mnsjGood;
+
+    @FXML
+    private Text txt_mnsjError;
 
     //ATRIBUTOS NECESARIOS
     private Client client;
@@ -106,7 +128,38 @@ public class ControllerChat {
 
     @FXML
     void addFriend(ActionEvent event) {
+        if(!this.txtfield_friend.getText().isEmpty()){
+            if(this.client.addFriend(this.txtfield_friend.getText())){
+                this.txt_mnsjGood.setVisible(true);
+                this.txt_mnsjError.setVisible(false);
+            }else{
+                this.txt_mnsjError.setVisible(true);
+                this.txt_mnsjGood.setVisible(false);
+            }
+        }
+    }
 
+    @FXML
+    void ocultarRespuesta(MouseEvent event) {
+        this.txt_mnsjError.setVisible(false);
+        this.txt_mnsjGood.setVisible(false);
+    }
+
+    @FXML
+    void acceptFriend(ActionEvent event) {
+        System.out.println("AAAAA");
+        String friend = this.friendsTable.getSelectionModel().getSelectedItem();
+        if(friend != null){
+            if(this.client.aceptarPeticion(friend)){
+                this.client.deletePeticion(friend);
+            }else
+                System.out.println("ZZZZZ");
+        }
+    }
+
+    @FXML
+    void rejectFriend(ActionEvent event) {
+        System.out.println("EEEEEE");
     }
 
     /**
@@ -123,6 +176,10 @@ public class ControllerChat {
 
         idNLColumn.setCellValueFactory(cellData -> {
             return cellData.getValue().mensajesNoLeidosProperty();
+        });
+
+        idFriendColumn.setCellValueFactory(cellData -> {
+            return new SimpleStringProperty(cellData.getValue());
         });
 
     }
@@ -143,6 +200,7 @@ public class ControllerChat {
         this.txt_usuario.setText(this.client.getUsername());
         // Add observable list data to the table
         userTable.setItems(this.userData);
+        this.friendsTable.setItems(this.client.getPeticiones_amistad());
     }
 
     //Métodos control gráfica
@@ -191,4 +249,6 @@ public class ControllerChat {
         contenedor.getChildren().add(texto);
         this.panelConversacion.getChildren().add(contenedor);
     }
+
+
 }

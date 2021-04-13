@@ -19,7 +19,7 @@ import java.util.Vector;
 public class ServerImpl extends UnicastRemoteObject
      implements ServerInterface, Serializable {
     private FachadaBD database;
-    private Vector clientList; //Lista de clientes conectados al servidor
+    private Vector<User> clientList; //Lista de clientes conectados al servidor
 
     public ServerImpl() throws RemoteException {
       super( );
@@ -56,6 +56,8 @@ public class ServerImpl extends UnicastRemoteObject
                 Vector<String> amigos = new Vector<>(this.database.obtenerAmigos(user.getUsername()));
                 callbackClientObject.notifyListaAmigos(amigos);
                 System.out.println("Inicializada su lista de Amigos");
+                Vector<String> peticiones = new Vector<String>(this.database.obtenerPeticionesPendientes(user.getUsername()));
+                callbackClientObject.notifyPeticionesPendientes(peticiones);
                 doCallbacksUsuarioLinea(user);
             }else{
                 throw new RemoteException();
@@ -78,6 +80,55 @@ public class ServerImpl extends UnicastRemoteObject
         } else {
             System.out.println("unregister: client wasn't registered.");
         }
+    }
+
+    public synchronized Boolean newFriendship(String user, String password, String friend) throws RemoteException{
+        if(this.database.validar(user,password)){
+            if(!this.database.existeFriendship(user,friend)){
+                if(this.database.newFriendship(user,friend)){
+                    if(this.clientList.contains(new User(friend,null))){
+                        for(User u: this.clientList){
+                            if(u.getUsername().equals(friend)){
+                                u.getClientInterface().notifyNewFriendship(user);
+                                break;
+                            }
+                        }
+                    }
+                    return true;
+                }else
+                    return false;
+            }
+        }
+        return false;
+    }
+
+    public synchronized Boolean acceptFriend(String user, String password, String friend) throws RemoteException{
+        if(this.database.validar(user,password)){
+            if(this.database.confirmFriendship(user,friend)){
+                    User user1 = null;
+                    for(User f: this.clientList){
+                        if(f.getUsername().equals(user)){
+                            user1 = f;
+                            break;
+                        }
+                    }
+                    if(this.clientList.contains(new User(friend,null))){
+                        for(User u: this.clientList){
+                            if(u.getUsername().equals(friend)){
+                                u.getClientInterface().notifyNewFriend(user1);
+                                user1.getClientInterface().notifyNewFriend(u);
+                                break;
+                            }
+                        }
+                    }else{
+                        User user2 = new User(friend,null);
+                        user1.getClientInterface().notifyNewFriend(user2);
+                    }
+                    return true;
+                }else
+                    return false;
+            }
+        return false;
     }
 
 
@@ -127,4 +178,6 @@ public class ServerImpl extends UnicastRemoteObject
         System.out.println("********************************\n" +
                 "Server completed callbacks ---");
     }
+
+
 }// end ServerImpl class

@@ -68,15 +68,35 @@ public class ClientImpl extends UnicastRemoteObject
       return true;
    }
 
+   //PETICIONES PENDIENTES
+
+   public synchronized String notifyPeticionesPendientes(Vector peticiones) throws RemoteException{
+      String mensaje = "Call back Peticiones Pendientes received";
+      this.cliente.setPeticiones_amistad(peticiones);
+      return mensaje;
+   }
+
+   public synchronized void notifyNewFriendship(String emisor) throws RemoteException{
+      System.out.println("Amigo "+emisor);
+      this.cliente.addPeticion(emisor);
+      System.out.println("Call back newFriendship received.");
+   }
+
+   public synchronized void notifyNewFriend(User friend) throws RemoteException{
+      this.cliente.addUsers_linea(friend);
+      System.out.println("Callback newFriend received");
+   }
+
    //Obtiene el alias que utiliza el cliente
    public String getUsername() throws RemoteException {
       return alias;
    }
 
    //permite fijar el alias del cliente
-   @Override
    public void setUsername(String alias) throws RemoteException {
       this.alias = alias;
       this.cliente.setUsername(alias);
    }
+
+
 }// end ClientImpl class

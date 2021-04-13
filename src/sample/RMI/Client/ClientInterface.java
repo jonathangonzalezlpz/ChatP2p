@@ -30,13 +30,13 @@ public interface ClientInterface
     //recibe la notificación de la desconexión de un usuario.
     public String notifyDesconnection(User off_client) throws RemoteException;
 
-    //Obtiene el alias que utiliza el cliente
-    public String getUsername() throws RemoteException;
-
-    //permite fijar el alias del cliente
-    public void setUsername(String alias) throws RemoteException;
-
     //Permite recibir un mensaje
     public Boolean recibirMensaje(String mensaje, String alias_emisor, ClientInterface emisor_interface)
             throws RemoteException;
+
+    public String notifyPeticionesPendientes(Vector peticiones) throws RemoteException;
+
+    public void notifyNewFriendship(String emisor) throws RemoteException;
+
+    public void notifyNewFriend(User friend) throws RemoteException;
 } // end interface
