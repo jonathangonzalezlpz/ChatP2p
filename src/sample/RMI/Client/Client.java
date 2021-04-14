@@ -220,6 +220,14 @@ public class Client implements Serializable {
         this.username = alias;
     }
 
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
     public StringProperty getConectado() {
         return conectado;
     }
@@ -272,13 +280,24 @@ public class Client implements Serializable {
         this.peticiones_amistad.remove(emisor);
     }
 
-    public Boolean aceptarPeticion(String friend){
+    public Boolean aceptarPeticion(String friend) {
         try {
-            return this.server.acceptFriend(this.username,this.password,friend);
-        } catch (Exception e){
-            System.out.println("Exception acceptarPeticion Client: "+e);
+            return this.server.acceptFriend(this.username, this.password, friend);
+        } catch (Exception e) {
+            System.out.println("Exception acceptarPeticion Client: " + e);
         }
         return false;
+    }
+
+    //Credenciales
+    public Boolean changePassword(String new_password){
+        try {
+            return this.server.changePassword(this.username,this.password,new_password);
+        }catch (Exception e){
+            System.out.println("Exception in changePassword Client: "+e);
+            return false;
+        }
+
     }
 
     //EQUALS, dos usuarios son el mismo si coincide al alias

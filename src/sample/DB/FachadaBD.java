@@ -311,4 +311,25 @@ public class FachadaBD {
         }
         return false;
     }
+
+    public Boolean changePassword(String user, String new_password){
+        Connection con;
+        PreparedStatement stmPassword=null;
+        con=this.conexion;
+
+        try {
+            stmPassword=con.prepareStatement("update usuarios "+
+                    "set password = ?"+
+                    "where nombre = ?");
+            stmPassword.setString(1, new_password);
+            stmPassword.setString(2, user);
+            stmPassword.executeUpdate();
+            return true;
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }finally{
+            try {stmPassword.close();} catch (SQLException e){System.out.println("Imposible cerrar cursores");}
+        }
+        return false;
+    }
 }

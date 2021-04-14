@@ -179,5 +179,11 @@ public class ServerImpl extends UnicastRemoteObject
                 "Server completed callbacks ---");
     }
 
+    public Boolean changePassword(String user,String old_password, String new_password) throws RemoteException{
+        if(this.database.validar(user,old_password)){
+            return this.database.changePassword(user,new_password);
+        }
+        return false;
+    }
 
 }// end ServerImpl class

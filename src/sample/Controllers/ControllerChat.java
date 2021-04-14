@@ -7,17 +7,23 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
+import javafx.util.Pair;
 import sample.Main;
 import sample.Model.Mensaje;
 import sample.RMI.Client.Client;
 
+import javax.swing.*;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Optional;
 
 public class ControllerChat {
 
@@ -84,6 +90,9 @@ public class ControllerChat {
     @FXML
     private Text txt_mnsjError;
 
+    @FXML
+    private Button btn_configuracion;
+
     //ATRIBUTOS NECESARIOS
     private Client client;
     HashMap<String,ArrayList<String>> mensajesPorUsuario = new HashMap<>();
@@ -147,19 +156,84 @@ public class ControllerChat {
 
     @FXML
     void acceptFriend(ActionEvent event) {
-        System.out.println("AAAAA");
         String friend = this.friendsTable.getSelectionModel().getSelectedItem();
         if(friend != null){
             if(this.client.aceptarPeticion(friend)){
                 this.client.deletePeticion(friend);
-            }else
-                System.out.println("ZZZZZ");
+            }
         }
     }
 
     @FXML
     void rejectFriend(ActionEvent event) {
         System.out.println("EEEEEE");
+    }
+
+    @FXML
+    void configurar(ActionEvent event){
+        //Creamos un input dialog personalizado
+        Dialog<Pair<String, String>> dialog = new Dialog<>();
+        dialog.setTitle("Tu Perfil");
+        dialog.setHeaderText("Puede modificar su clave de acceso");
+
+// Set the icon (must be included in the project).
+        dialog.setGraphic(new ImageView(this.getClass().getResource("../Image/perfil.png").toString()));
+
+// Set the button types.
+        ButtonType ActButtonType = new ButtonType("Actualizar", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(ActButtonType, ButtonType.CANCEL);
+
+// Create the username and password labels and fields.
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+        grid.setPadding(new Insets(20, 150, 10, 10));
+
+        TextField username = new TextField();
+        username.setPromptText("Username");
+        username.setText(this.client.getUsername());
+        username.setEditable(false);
+        TextField password = new TextField();
+        password.setPromptText("Password");
+        password.setText(this.client.getPassword());
+
+        grid.add(new Label("Username:"), 0, 0);
+        grid.add(username, 1, 0);
+        grid.add(new Label("Password:"), 0, 1);
+        grid.add(password, 1, 1);
+
+// Enable/Disable login button depending on whether a username was entered.
+        Node ActButton = dialog.getDialogPane().lookupButton(ActButtonType);
+        ActButton.setDisable(true);
+
+// Do some validation (using the Java 8 lambda syntax).
+        password.textProperty().addListener((observable, oldValue, newValue) -> {
+            ActButton.setDisable(newValue.trim().isEmpty());
+        });
+
+        dialog.getDialogPane().setContent(grid);
+
+// Request focus on the username field by default.
+        Platform.runLater(() -> password.requestFocus());
+
+// Convert the result to a username-password-pair when the act button is clicked.
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ActButtonType) {
+                if(this.client.changePassword(password.getText())) {
+                    this.client.setPassword(password.getText());
+                    return new Pair<>(username.getText(), password.getText());
+                }
+                else
+                    dialog.setHeaderText("Ha habido un error, vuelva a intentarlo.");
+            }
+            return null;
+        });
+
+        Optional<Pair<String, String>> result = dialog.showAndWait();
+
+        result.ifPresent(usernamePassword -> {
+            System.out.println("Username=" + usernamePassword.getKey() + ", Password=" + usernamePassword.getKey());
+        });
     }
 
     /**
