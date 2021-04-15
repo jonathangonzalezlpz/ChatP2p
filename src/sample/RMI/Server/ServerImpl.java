@@ -55,7 +55,6 @@ public class ServerImpl extends UnicastRemoteObject
                 System.out.println("Registered new client ");
                 Vector<String> amigos = new Vector<>(this.database.obtenerAmigos(user.getUsername()));
                 callbackClientObject.notifyListaAmigos(amigos);
-                System.out.println("Inicializada su lista de Amigos");
                 Vector<String> peticiones = new Vector<String>(this.database.obtenerPeticionesPendientes(user.getUsername()));
                 callbackClientObject.notifyPeticionesPendientes(peticiones);
                 doCallbacksUsuarioLinea(user);
@@ -131,6 +130,16 @@ public class ServerImpl extends UnicastRemoteObject
         return false;
     }
 
+    public Boolean rejectFriend(String user, String password, String friend) throws RemoteException{
+        if(this.database.validar(user,password)){
+            if(this.database.rejectFriendship(user,friend)){
+                return true;
+            }else
+                return false;
+        }
+        return false;
+    }
+
 
     //Callback que Notifica a todos los usuarios la llegada de uno nuevo (CONEXION NUEVA), al nuevo le pasa la lista de usuarios en línea
     private synchronized void doCallbacksUsuarioLinea(User new_client) throws RemoteException{
@@ -152,7 +161,7 @@ public class ServerImpl extends UnicastRemoteObject
             }
         }// end for
         //Amigos en linea
-        new_client.getClientInterface().notifyInicio(amigos);
+        new_client.getClientInterface().notifyInicio(amigos); //enviamos la lista de amigos en linea con sus interfaces
         System.out.println("********************************\n" +
                 "Server completed callbacks ---");
     }

@@ -35,6 +35,8 @@ public interface ServerInterface extends Remote {
 
   public Boolean acceptFriend(String user, String password, String friend) throws RemoteException;
 
+  public Boolean rejectFriend(String user, String password, String friend) throws RemoteException;
+
   //Crecenciales
   public Boolean changePassword(String user,String old_password, String new_password) throws RemoteException;
 }

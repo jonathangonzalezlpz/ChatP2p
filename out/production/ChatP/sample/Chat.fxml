@@ -43,10 +43,10 @@
                         <Font size="14.0" />
                      </font>
                   </TextField>
-                  <Button fx:id="btn_enviar" layoutX="244.0" layoutY="356.0" mnemonicParsing="false" onAction="#enviar" text="&gt;" />
+                  <Button fx:id="btn_enviar" layoutX="244.0" layoutY="356.0" mnemonicParsing="false" onAction="#enviar" prefHeight="28.0" prefWidth="26.0" />
                </children>
             </Pane>
-            <Button fx:id="btnCargar" layoutX="93.0" layoutY="408.0" mnemonicParsing="false" onAction="#cargarConversacion" prefHeight="28.0" prefWidth="64.0" text="Cargar" />
+            <Button fx:id="btnCargar" layoutX="206.0" layoutY="404.0" mnemonicParsing="false" onAction="#cargarConversacion" prefHeight="34.0" prefWidth="34.0" />
             <Text fx:id="txt_usuario" layoutX="53.0" layoutY="24.0" strokeType="OUTSIDE" strokeWidth="0.0" wrappingWidth="143.0126953125">
                <font>
                   <Font name="Arial" size="16.0" />
@@ -65,14 +65,14 @@
                      </font>
                   </Text>
                   <TextField fx:id="txtfield_friend" layoutX="14.0" layoutY="46.0" onMouseClicked="#ocultarRespuesta" prefHeight="28.0" prefWidth="175.0" />
-                  <Button fx:id="btn_AddFriend" layoutX="117.0" layoutY="9.0" mnemonicParsing="false" onAction="#addFriend" text="Add" />
+                  <Button fx:id="btn_AddFriend" layoutX="111.0" layoutY="6.0" mnemonicParsing="false" onAction="#addFriend" prefHeight="34.0" prefWidth="34.0" />
                   <TableView fx:id="friendsTable" layoutX="305.0" layoutY="9.0" prefHeight="130.0" prefWidth="205.0">
                     <columns>
                         <TableColumn fx:id="idFriendColumn" prefWidth="204.0" text="Usuarios" />
                     </columns>
                   </TableView>
-                  <Button fx:id="btnReject" layoutX="242.0" layoutY="9.0" mnemonicParsing="false" onAction="#rejectFriend" text="X" />
-                  <Button fx:id="btnAccept" layoutX="274.0" layoutY="9.0" mnemonicParsing="false" onAction="#acceptFriend" text="V" />
+                  <Button fx:id="btnReject" layoutX="225.0" layoutY="9.0" mnemonicParsing="false" onAction="#rejectFriend" prefHeight="34.0" prefWidth="34.0" />
+                  <Button fx:id="btnAccept" layoutX="266.0" layoutY="9.0" mnemonicParsing="false" onAction="#acceptFriend" prefHeight="34.0" prefWidth="34.0" />
                   <Text fx:id="txt_mnsjGood" fill="#55c93b" layoutX="169.0" layoutY="30.0" strokeType="OUTSIDE" strokeWidth="0.0" text="V" visible="false">
                      <font>
                         <Font size="20.0" />
@@ -90,7 +90,7 @@
                   <Font name="Arial Bold" size="18.0" />
                </font>
             </Text>
-            <Button fx:id="btn_configuracion" layoutX="521.0" layoutY="2.0" mnemonicParsing="false" onAction="#configurar" text="A" />
+            <Button fx:id="btn_configuracion" layoutX="521.0" layoutY="2.0" mnemonicParsing="false" onAction="#configurar" prefHeight="28.0" prefWidth="26.0" />
          </children>
       </Pane>
    </children>

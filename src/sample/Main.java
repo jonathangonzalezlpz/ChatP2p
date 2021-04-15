@@ -44,7 +44,9 @@ public class Main extends Application {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource("Chat.fxml"));
             Parent root = loader.load();
             primaryStage.setTitle("InicioChatP2P");
-            primaryStage.setScene(new Scene(root, 550, 600));
+            Scene escena = new Scene(root, 550, 600);
+            escena.getStylesheets().add("CSS/chat.css");
+            primaryStage.setScene(escena);
             // Give the controllerChat access to the main app.
             ControllerChat controllerChat = loader.getController();
             controllerChat.setMainApp(this);

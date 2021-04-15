@@ -166,7 +166,12 @@ public class ControllerChat {
 
     @FXML
     void rejectFriend(ActionEvent event) {
-        System.out.println("EEEEEE");
+        String friend = this.friendsTable.getSelectionModel().getSelectedItem();
+        if(friend != null){
+            if(this.client.rechazarPeticion(friend)){
+                this.client.deletePeticion(friend);
+            }
+        }
     }
 
     @FXML

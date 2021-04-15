@@ -137,6 +137,27 @@ public class FachadaBD {
     }
 
     //AMIGOS
+    public boolean rejectFriendship(String user1,String user2){
+        Connection con;
+        PreparedStatement stmFriends=null;
+        con=this.conexion;
+
+        try {
+            stmFriends=con.prepareStatement("Delete from friends "+
+                    "where user1 = ? and user2 = ? and estado = ?");
+            stmFriends.setString(1, user2);
+            stmFriends.setString(2, user1);
+            stmFriends.setString(3, "Pendiente");
+            stmFriends.executeUpdate();
+            return true;
+        } catch (SQLException e){
+            System.out.println(e.getMessage());
+        }finally{
+            try {stmFriends.close();} catch (SQLException e){System.out.println("Imposible cerrar cursores");}
+        }
+        return false;
+    }
+
     public boolean confirmFriendship(String user1,String user2){
         Connection con;
         PreparedStatement stmFriends=null;
@@ -158,6 +179,7 @@ public class FachadaBD {
         }
         return false;
     }
+
     public Vector<String> obtenerPeticionesPendientes(String username){
         Connection con;
         PreparedStatement stmPeticiones=null;

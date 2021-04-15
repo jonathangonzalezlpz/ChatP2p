@@ -16,27 +16,33 @@ import java.util.Vector;
 public interface ClientInterface
   extends Remote, Serializable {
 
-    //Permite obtener la lista inicial (momento de la conexion) de usuarios en linea
+    //Permite obtener la lista de amigos (momento de la conexion) del usuario
+    //Sin interfaces, solo sus nombres de usuario
     public String notifyListaAmigos(Vector usuarios)
             throws RemoteException;
 
     //Permite obtener la lista inicial (momento de la conexion) de usuarios en linea
     public String notifyInicio(Vector usuarios)
-      throws RemoteException;
+            throws RemoteException;
 
     //recibe la notificación de un nuevo usuario en línea
-    public String notifyConnection(String username, ClientInterface new_client) throws RemoteException;
+    public String notifyConnection(String username, ClientInterface new_client)
+            throws RemoteException;
 
     //recibe la notificación de la desconexión de un usuario.
-    public String notifyDesconnection(User off_client) throws RemoteException;
+    public String notifyDesconnection(User off_client)
+            throws RemoteException;
 
     //Permite recibir un mensaje
     public Boolean recibirMensaje(String mensaje, String alias_emisor, ClientInterface emisor_interface)
             throws RemoteException;
 
-    public String notifyPeticionesPendientes(Vector peticiones) throws RemoteException;
+    public String notifyPeticionesPendientes(Vector peticiones)
+            throws RemoteException;
 
-    public void notifyNewFriendship(String emisor) throws RemoteException;
+    public void notifyNewFriendship(String emisor)
+            throws RemoteException;
 
-    public void notifyNewFriend(User friend) throws RemoteException;
+    public void notifyNewFriend(User friend)
+            throws RemoteException;
 } // end interface

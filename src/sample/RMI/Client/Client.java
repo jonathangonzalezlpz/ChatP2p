@@ -289,6 +289,15 @@ public class Client implements Serializable {
         return false;
     }
 
+    public Boolean rechazarPeticion(String friend){
+        try{
+            return this.server.rejectFriend(this.username,this.password,friend);
+        }catch (Exception e){
+            System.out.println("Exception rechazarPeticion Cliente: "+e);
+            return false;
+        }
+    }
+
     //Credenciales
     public Boolean changePassword(String new_password){
         try {
